@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472;net48;net5</TargetFrameworks>
+    <Authors>Cubes.ly</Authors>
+    <Company>Cubes IT Solutions</Company>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <Copyright>Cubes.ly</Copyright>
+    <Description>Cubes Framework provides some modules that help developers dealing with advanced problem like security and hardware accessing and so no ... in an easy way.</Description>
+    <PackageLicenseExpression>CubesLy</PackageLicenseExpression>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageIconUrl />
+    <PackageReleaseNotes>Security and hardware accessing modules added</PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Management" Version="5.0.0" />
+    <PackageReference Include="Unity" Version="5.11.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ProgramsSecurity">
+      <HintPath>..\..\..\..\My Classes\My dlls\ProgramsSecurity.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
