@@ -27,7 +27,7 @@ namespace CubesFramework.Security
 
         }
         public string GeneratedLicense => _license;
-        public async void SaveLicenseToFile(string filepath)
+        public async void SaveLicenseToFile(string filepath, string serial, string password)
         {
             switch (!string.IsNullOrEmpty(_license))
             {
@@ -35,22 +35,25 @@ namespace CubesFramework.Security
                     File.WriteAllText(filepath, _license);
                     return;
                 default:
-                    await GenerateLicense("20Cubes87234909SoftwareCompany");
+                    await GenerateLicense(serial,password);
                     File.WriteAllText(filepath, _license);
                     break;
             }
         }
-        public async Task<string> GenerateLicense(string password)
+        public async Task<string> GenerateLicense(string serial,string password)
         {
-            var Processor = HardwareInfo.GetProcessorId();
-            var hardserialnumber = HardwareInfo.GetHDDSerialNo();
-            var BoardProductId = HardwareInfo.GetBoardProductId();
-            var targettext = $"{Processor}{hardserialnumber}{BoardProductId}".Trim();
-            Crypto crypto = new Crypto(System.Security.Cryptography.MD5.Create());
+            serial = serial.Replace("-", string.Empty);
+            var targettext = serial.Trim();
+            Crypto crypto = new Crypto(System.Security.Cryptography.SHA256.Create());
             _license = await crypto.EncryptCse(targettext, password);
             return _license;
         }
-
-
+        public async Task<bool> CheckLicense(string license, string password, string serial)
+        {
+            Crypto crypto = new Crypto(System.Security.Cryptography.SHA256.Create());
+            var plaintxt = await crypto.DecryptCse(license, password);
+            serial=serial.Replace("-", string.Empty);
+            return string.Compare(plaintxt, serial, true) == 0;
+        }
     }
 }

@@ -414,7 +414,7 @@ namespace CubesFramework.SystemManagement
         public string HDDSerialNo { get; set; }
         public override string ToString()
         {
-            return $"{ProcessorId}{BoardProductId}{HDDSerialNo}";
+            return $"{ProcessorId}{BoardProductId}{HDDSerialNo}".Trim();
         }
     }
 }
