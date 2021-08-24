@@ -18,4 +18,4 @@ Cubes Framework provides some modules that help developers dealing with advanced
 * Use **GenerateLicense** method from **License** class to generate and retrun the license and pass the required parameters to it
 1. serila : Comes from the client app
 2. password : set your own password key and save it to use in the activator software
-* Send the generated License to the target client to be use it
+* Send the generated License to the target client to use it
