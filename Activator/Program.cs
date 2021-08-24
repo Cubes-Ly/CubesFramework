@@ -9,7 +9,7 @@ namespace Activator
     {
         static void Main(string[] args)
         {
-            License license = new License();
+            License license = new License(new Crypto());
             license.GenerateLicense(HardwareInfo.GetDeviceDataAsSerial(new HardwareDeviceData()),"cubes2021").Wait();
             Console.WriteLine(license.GeneratedLicense);
             Console.Read();
