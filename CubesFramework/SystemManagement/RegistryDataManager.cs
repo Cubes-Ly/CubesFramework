@@ -69,7 +69,10 @@ namespace CubesFramework.SystemManagement
             {
                 using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\CubesFoundation\Activation", true))
                 {
-                    key != null ? key.SetValue("StorageMethod", value);
+                    if (key != null)
+                    {
+                        key.SetValue("StorageMethod", value);
+                    }
                 }
             }
         }
@@ -89,7 +92,10 @@ namespace CubesFramework.SystemManagement
             {
                 using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\CubesFoundation\Activation", true))
                 {
-                    key != null ? key.SetValue("License", value);
+                    if (key != null)
+                    {
+                        key.SetValue("License", value);
+                    }
                 }
             }
         }
