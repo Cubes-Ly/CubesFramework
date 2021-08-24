@@ -13,7 +13,7 @@ Cubes Framework provides some modules that help developers dealing with advanced
 * Use **SaveLicense** method from **License** class to save the checked license in a place in your device.
 * **SaveLicense** Method supports two storing methods Store to file and store to the windows registery.
 
-###3 Developing the Activator software
+#### Developing the Activator software
 ***
 * Use **GenerateLicense** method from **License** class to generate and retrun the license and pass the required parameters to it
 1. serila : Comes from the client app
