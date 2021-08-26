@@ -19,6 +19,8 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using CubesFramework.Extensions;
+
 namespace CubesFramework.Security
 {
     public enum LicenseStorageMethod
@@ -39,7 +41,7 @@ namespace CubesFramework.Security
             this.crypto = crypto;
             this.registryDataManager = registryDataManager;
         }
-        public string GeneratedLicense => _license;
+        public string GeneratedLicense => _license.SplitBoardInfo('-', 5);
         /// <summary>
         /// Runs generate license method if it wasn't and save the generated license to a file
         /// </summary>
@@ -69,8 +71,8 @@ namespace CubesFramework.Security
         {
             serial = serial.Replace("-", string.Empty);
             var targettext = serial.Trim();
-            _license = await crypto.EncryptCse(targettext, password);
-            return _license;
+            _license = await crypto.EncryptAes(targettext, password);
+            return _license.SplitBoardInfo('-',5 );
         }
         /// <summary>
         /// Check whether a license was generated from the passed serial and password or not
@@ -81,9 +83,10 @@ namespace CubesFramework.Security
         /// <returns>True if the license matches the password and the serial,otherwise flase</returns>
         public async Task<bool> CheckLicense(string license, string password, string serial)
         {
-            var plaintxt = await crypto.DecryptCse(license, password);
+            license = license.Replace("-", string.Empty);
+            var plaintxt = await crypto.DecryptAes(license, password);
             serial=serial.Replace("-", string.Empty);
-            return string.Compare(plaintxt, serial, true) == 0;
+            return string.Compare(plaintxt, serial, false) == 0;
         }
         /// <summary>
         /// Saves the generated license to a place
@@ -102,7 +105,7 @@ namespace CubesFramework.Security
                 StorageMethod=storageMethod
             };
             var json = JsonConvert.SerializeObject(licensemodel);
-            var encjson = await crypto.EncryptCse(json, serail);
+            var encjson = await crypto.EncryptAes(json, serail);
             switch (storageMethod)
             {
                 case LicenseStorageMethod.ToFile:
@@ -138,7 +141,7 @@ namespace CubesFramework.Security
                         var enclicense=File.ReadAllText(filepath);
                         try
                         {
-                            var filemodel = JsonConvert.DeserializeObject<LicenseModel>(await crypto.DecryptCse(enclicense, HardwareInfo.GetDeviceDataAsSerial(new HardwareDeviceData())));
+                            var filemodel = JsonConvert.DeserializeObject<LicenseModel>(await crypto.DecryptAes(enclicense, HardwareInfo.GetDeviceDataAsSerial()));
                             activated = await CheckLicense(filemodel.ActivationSerial, password, filemodel.DeviceSerial);
                         }
                         catch 
@@ -151,7 +154,7 @@ namespace CubesFramework.Security
                     var encmodel = registryDataManager.LicenseModel;
                     try
                     {
-                        var registrymodel = JsonConvert.DeserializeObject<LicenseModel>(await crypto.DecryptCse(encmodel, HardwareInfo.GetDeviceDataAsSerial(new HardwareDeviceData())));
+                        var registrymodel = JsonConvert.DeserializeObject<LicenseModel>(await crypto.DecryptAes(encmodel, HardwareInfo.GetDeviceDataAsSerial()));
                         activated = await CheckLicense(registrymodel.ActivationSerial, password, registrymodel.DeviceSerial);
                     }
                     catch

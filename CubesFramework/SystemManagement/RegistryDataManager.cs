@@ -11,6 +11,10 @@ namespace CubesFramework.SystemManagement
 {
     public class RegistryDataManager
     {
+        public RegistryDataManager()
+        {
+            Initialize();
+        }
         public void Initialize()
         {
             using (RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\CubesFoundation"))
@@ -71,7 +75,7 @@ namespace CubesFramework.SystemManagement
                 {
                     if (key != null)
                     {
-                        key.SetValue("StorageMethod", value);
+                        key.SetValue("StorageMethod",(int) value);
                     }
                 }
             }

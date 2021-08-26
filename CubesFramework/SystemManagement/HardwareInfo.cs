@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.
 /* Unmerged change from project 'CubesFramework (netcoreapp3.1)'
 Before:
@@ -394,27 +395,45 @@ namespace CubesFramework.SystemManagement
         /// </summary>
         /// <param name="deviceData">target device data</param>
         /// <returns></returns>
-        public static string GetDeviceDataAsSerial(HardwareDeviceData deviceData)
+        public static string GetDeviceDataAsSerial()
         {
-            return deviceData.ToString().SplitBoardInfo('-', 5);
+            ManagementObjectSearcher moSearcher = new
+            ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive");
+            List<HardDrive> hardDriveDetails = new List<HardDrive>();
+            foreach (ManagementObject wmi_HD in moSearcher.Get())
+            {
+                HardDrive hd = new HardDrive();  // User Defined Class
+                hd.Model = wmi_HD["Model"]?.ToString();  //Model Number
+                hd.Type = wmi_HD["InterfaceType"]?.ToString();  //Interface Type
+                hd.SerialNo = wmi_HD["SerialNumber"]?.ToString();// Serial Number
+                hardDriveDetails.Add(hd);
+            }
+            return hardDriveDetails[0].ToString().SplitBoardInfo('-', 5);
         }
     }
-    public class HardwareDeviceData
+    public class HardDrive
     {
-        public HardwareDeviceData()
+        private string model = null;
+        private string type = null;
+        private string serialNo = null;
+        public string Model
         {
-            ProcessorId = HardwareInfo.GetProcessorId();
-            BoardProductId = HardwareInfo.GetBoardProductId();
-            HDDSerialNo = HardwareInfo.GetHDDSerialNo();
-            PhysicalMemory = HardwareInfo.GetPhysicalMemory();
+            get { return model; }
+            set { model = value; }
         }
-        public string ProcessorId { get; set; }
-        public string BoardProductId { get; set; }
-        public string PhysicalMemory { get; set; }
-        public string HDDSerialNo { get; set; }
+        public string Type
+        {
+            get { return type; }
+            set { type = value; }
+        }
+        public string SerialNo
+        {
+            get { return serialNo; }
+            set { serialNo = value; }
+        }
         public override string ToString()
         {
-            return $"{ProcessorId}{BoardProductId}{HDDSerialNo}".Trim();
+            return $"{model}{type}{serialNo}";
         }
     }
 }
